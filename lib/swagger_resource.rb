@@ -1,3 +1,4 @@
+require 'faraday'
 require 'json'
 class SwaggerResource
   attr_accessor :specification
@@ -5,6 +6,12 @@ class SwaggerResource
   def initialize(specification)
     @specification = specification
     @methods = self.class.get_methods(specification)
+    @method_chain = []
+    @conn = Faraday.new(:url => specification['basePath']) do |f|
+      #faraday.request  :url_encoded             # form-encode POST params
+      f.response :logger                  # log requests to STDOUT
+      f.adapter  Faraday.default_adapter  # make requests with Net::HTTP
+    end
     super()
   end
 
@@ -25,13 +32,10 @@ class SwaggerResource
 
   def method_missing(meth, *args)
     api, operation = @methods[meth]
-=begin
-conn = Faraday.new(:url => 'http://sushi.com') do |faraday|
-  faraday.request  :url_encoded             # form-encode POST params
-  faraday.response :logger                  # log requests to STDOUT
-  faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
-end 
-=end    
-     operation.inspect
+    r = @conn.get do |req|
+      req.url api["path"] #, :page => 2
+      req.params['api'] = "foo"
+    end
+    r.body
   end
 end
