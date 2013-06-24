@@ -1,6 +1,7 @@
 Feature: API
 
   Scenario: Instantiate object
+    Given a valid api_key is configured
     When I create SwaggerResource '@object' from json:
       """
 {
@@ -32,8 +33,5 @@ Feature: API
 }
       """
     When calling '@object.agencyids' 
-    Then the JSON response should be:
-      """
-      [{"tweet":"Hello World!"},{"tweet":"New Rails has been released"}]
-      """
+    Then the response should contain "COMPTROLLER GENERAL OF THE UNITED STATES"
 

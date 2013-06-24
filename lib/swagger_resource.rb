@@ -1,9 +1,18 @@
 require 'faraday'
 require 'json'
+require 'swagger_resource/configuration'
 class SwaggerResource
   attr_accessor :specification
 
-  def initialize(specification)
+  def self.configure
+    @config ||= Configuration.new({})
+    yield(@config) if block_given?
+    @config
+  end
+
+  def initialize(specification, config={})
+    @config = self.class.configure.as_json.merge(config)
+
     @specification = specification
     @methods = self.class.get_methods(specification)
     @method_chain = []
@@ -32,9 +41,12 @@ class SwaggerResource
 
   def method_missing(meth, *args)
     api, operation = @methods[meth]
+    path = api["path"]
+    path = path.gsub(/^\//,"")
     r = @conn.get do |req|
-      req.url api["path"] #, :page => 2
-      req.params['api'] = "foo"
+      #@conn.url_prefix.path
+      req.url path#, :page => 2
+      req.params['api_key'] = @config["api_key"]
     end
     r.body
   end
