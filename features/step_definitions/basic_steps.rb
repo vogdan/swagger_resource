@@ -10,3 +10,7 @@ Then(/^the JSON response should be:$/) do |json|
   #expect(@result).to eq(json)
   raise "error: #{@result}" unless @result == json
 end
+
+Then(/^the response should be:$/) do |string|                                                 
+  raise "error: #{@result}" unless @result == string.strip
+end

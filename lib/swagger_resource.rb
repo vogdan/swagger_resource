@@ -34,4 +34,9 @@ end
 =end    
      operation.inspect
   end
+  
+  def get_info(meth)
+    api, operation = @methods[meth.to_sym]
+    operation["summary"]
+  end  
 end
