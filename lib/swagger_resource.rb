@@ -50,4 +50,9 @@ class SwaggerResource
     end
     r.body
   end
+  
+  def get_info(meth)
+    api, operation = @methods[meth.to_sym]
+    operation["summary"]
+  end  
 end
