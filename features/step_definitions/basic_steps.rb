@@ -21,11 +21,11 @@ Then(/^the response should contain "(.*?)"$/) do |string|
   @result.should include(string)
 end
 
-Then(/^the JSON response should be:$/) do |json|                                                 
+Then(/^the JSON response should be:$/) do |json|
   #expect(@result).to eq(json)
   raise "error: #{@result}" unless @result == json
 end
 
-Then(/^the response should be:$/) do |string|                                                 
+Then(/^the response should be:$/) do |string|
   raise "error: #{@result}" unless @result == string.strip
 end

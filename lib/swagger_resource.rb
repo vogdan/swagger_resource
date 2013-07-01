@@ -1,6 +1,7 @@
 require 'faraday'
 require 'json'
 require 'swagger_resource/configuration'
+
 class SwaggerResource
   attr_accessor :specification
 
@@ -55,4 +56,9 @@ class SwaggerResource
     api, operation = @methods[meth.to_sym]
     operation["summary"]
   end  
+
+  def get_apidesc(meth)
+    api, operation = @methods[meth.to_sym]
+    api["description"]
+  end
 end
